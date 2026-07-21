@@ -1,0 +1,13 @@
+.layout {
+  display: grid;
+  grid-template-columns: 80px 1fr;   /* sidebar width, then rest */
+  grid-template-rows: auto 1fr;        /* header height, then rest */
+  grid-template-areas:
+    "nav header"
+    "nav main";
+  height: 100%;
+}
+
+.nav    { grid-area: nav; }
+.header { grid-area: header; }
+.main   { grid-area: main; }
