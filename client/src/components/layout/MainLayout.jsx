@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../common/Header'
 import NavBar from '../common/NavBar'
 import { Outlet } from 'react-router-dom'
@@ -9,6 +9,10 @@ import NotesLayout from './NotesLayout'
 function MainLayout() {
 
   const [note, setNote] = useState([])
+
+  useEffect(() => {
+    loadNotes()
+  }, []);
 
 
   async function addNote(){
@@ -30,6 +34,15 @@ function MainLayout() {
     const updatedNote = await response.json();
     setNote(prev => prev.map(n => n.id === id ? updatedNote : n))
     console.log(`${id} Note saved`);
+  }
+
+  async function loadNotes(){
+    const response = await fetch("http://localhost:3000/notes", {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'},
+    })
+    const notes = await response.json();
+    setNote(notes)
   }
 
   const noteObj = {
