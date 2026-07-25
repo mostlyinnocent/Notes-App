@@ -4,6 +4,43 @@ Bugs and gotchas hit while building this project, and how they got solved. Newes
 
 ---
 
+## Blur bubbles from any focused descendant, not just when focus truly leaves the container
+
+**Date:** 2026-07-25
+
+### Problem
+After adding an edit-mode toggle (click the pencil button to unlock an existing note, blur to save and re-lock it), clicking the pencil correctly unlocked the note — but then clicking into the title field to actually start typing immediately saved the note and locked it back to read-only, before any edit had happened.
+
+### Root Cause
+`onBlur` was attached to the note's outer wrapping `<div>`, relying on event bubbling to catch a blur from any descendant (title input, content textarea, star button, edit button) losing focus. But blur bubbles regardless of *where* the newly-focused element is going — including when focus simply moves between two elements that are both still inside the same container, like from the edit button to the title input. The handler had no way to tell "focus moved to a sibling field within this same note" apart from "focus left this note entirely," so it treated every internal focus change as "the user is done," saving and re-locking immediately.
+
+A separate thing that slowed down diagnosing this: a `console.log('edit clicked', id)` meant to confirm the edit button's `onClick` was firing had actually been placed inside the `onBlur` handler, not inside the button's `onClick`. It printed on every blur regardless of whether the button was ever clicked, creating a false impression that the click handler was running (and in what order) when it wasn't being observed at all.
+
+### Solution
+Added a `ref` (`parentRef`) on the wrapping `<div>` to get a handle on its real DOM node. Inside `onBlur`, read `event.relatedTarget` (the element about to receive focus) and check `parentRef.current.contains(relatedTarget)`:
+
+```js
+onBlur={(event) => {
+  const nextFocusedElement = event.relatedTarget
+  const parentWrapper = parentRef.current
+
+  if (parentWrapper.contains(nextFocusedElement)) {
+    return // focus just moved to a sibling field inside this same note — not done editing
+  }
+
+  // focus genuinely left the note — save and lock
+  handleBlur(id, titleRef.current.value, contentRef.current.value, starred)
+  setIsEditable(false)
+}}
+```
+
+### Lesson
+An event handler attached to a container to catch bubbled events from any descendant can't assume "a descendant lost focus" means "the user left the whole container" — moving focus between two children of the same container triggers blur just as much as actually leaving it does. Blur/focus events carry `relatedTarget`, telling you where focus is actually headed; combined with `Node.contains()` on a ref to the container, that's how you distinguish "still inside" from "genuinely left."
+
+Separately: when adding a diagnostic `console.log` to confirm a specific handler is firing, double-check it's physically inside *that* handler and not a neighboring one — a log with a plausible-sounding name can still create a completely false picture of what's actually running and in what order.
+
+---
+
 ## A backend endpoint requiring several fields together silently breaks if the UI only sends one
 
 **Date:** 2026-07-23
