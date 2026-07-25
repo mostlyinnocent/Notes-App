@@ -1,6 +1,6 @@
 .layout {
   display: grid;
-  grid-template-columns: 80px 1fr;   /* sidebar width, then rest */
+  grid-template-columns: 260px 1fr;   /* sidebar width, then rest */
   grid-template-rows: auto 1fr;        /* header height, then rest */
   grid-template-areas:
     "nav header"
