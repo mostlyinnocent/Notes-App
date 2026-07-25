@@ -45,9 +45,19 @@ function MainLayout() {
     setNote(notes)
   }
 
+  async function deleteNote(id){
+    const response = await fetch(`http://localhost:3000/notes/${id}`,{
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+    })
+    const note = await response.json();
+    setNote(prev => prev.filter(n => n.id !== id))
+  }
+
   const noteObj = {
     notes: note,
-    handler: saveNote
+    saveHandler: saveNote,
+    deleteHandler: deleteNote
   }
 
   return (

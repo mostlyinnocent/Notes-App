@@ -53,7 +53,7 @@ export function deleteNote(req, res){
     if(!wasDeleted){
       return res.status(404).json({error: "Note not found"})
     }
-    res.json(note)
+    res.json(wasDeleted)
   } catch(err) {
     catchError(res, err)
   }
