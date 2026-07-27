@@ -26,13 +26,13 @@ function Note({id, title, content, starred, handleBlur, handleDelete}) {
         setIsEditable(false);
       }} className='h-[200px] w-full flex flex-col items-start justify-start border border-(--border) bg-(--card) shadow-(--shadow) rounded-[16px] px-4 pt-4 pb-0 relative gap-[10px] transition-all hover:translate-y-[-4px]'>
       <div className='w-full flex items-center justify-between'>
-        <input id='titleNode' ref={titleRef} className='w-full text-(--text) text-2xl font-bold border-0 outline-0' placeholder="Title" defaultValue={title} autoFocus readOnly={!isEditable}/>
+        <input id='titleNode' ref={titleRef} className='w-full text-(--text) font-newsreader text-[18px] font-bold border-0 outline-0' placeholder="Title" defaultValue={title} autoFocus readOnly={!isEditable}/>
         <button className='h-5 w-5 flex items-center justify-center cursor-pointer'>
           <img src={StarIcon} alt="" className='h-full w-full block opacity-50'/>
         </button>
       </div>
       <div className='h-full w-full overflow-hidden'>
-        <textarea id='contentNode' ref={contentRef} placeholder='Enter a note' className='h-full w-full text-(--muted-text) resize-none' defaultValue={content} readOnly={!isEditable}></textarea>
+        <textarea id='contentNode' ref={contentRef} placeholder='Enter a note' className='h-full w-full font-sora text-(--muted-text) resize-none' defaultValue={content} readOnly={!isEditable}></textarea>
       </div>
       <div className='w-full h-[100px] flex items-center justify-end border-t border-t-(--border) gap-2'>
         <button onClick={()=>{console.log('edit clicked', id);setIsEditable(true)}} className='h-6 w-6 rounded-sm flex items-center justify-center cursor-pointer text-[#928e85] hover:bg-[#2b3440] hover:text-[#7ea3c9]'>

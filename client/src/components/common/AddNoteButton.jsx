@@ -7,7 +7,7 @@ function AddNoteButton({addNote}) {
       <div>
         <img src={AddNoteIcon} alt="" className='h-[100%] w-[100%] block'/>
       </div>
-      <span className='text-(--text)'>New note</span>
+      <span className='text-(--text) font-sora'>New note</span>
     </button>
   )
 }
