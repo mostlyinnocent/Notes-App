@@ -37,3 +37,9 @@ export function deleteNote(id){
   const result = db.prepare(`DELETE FROM notes WHERE id = ?`).run(id)
   return result.changes > 0 ;
 }
+
+export function getStarredNotes(starred){
+  checkDb();
+  const starredNotes = db.prepare(`SELECT * FROM notes WHERE starred = ?`).all(starred);
+  return starredNotes;
+}

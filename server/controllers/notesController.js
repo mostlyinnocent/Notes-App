@@ -58,3 +58,12 @@ export function deleteNote(req, res){
     catchError(res, err)
   }
 }
+
+export function getStarredNotes(req, res){
+  try {
+    const note = Note.getStarredNotes(Number(req.query.starred))
+    res.json(note)
+  } catch(err) {
+    catchError(res, err)
+  }
+}
