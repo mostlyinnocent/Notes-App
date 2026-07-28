@@ -11,6 +11,9 @@ const router = createBrowserRouter([
         index: true,
         element: <Navigate to="/notes" replace/>
       },
+      { path: '/notes/starred',
+        element: <NotesLayout onlyStarred/>
+      },
       {
         path: '/notes/:noteId?',
         element: <NotesLayout/>,
