@@ -28,7 +28,15 @@ function Note({id, title, content, starred, handleBlur, handleDelete}) {
       <div className='w-full flex items-center justify-between'>
         <input id='titleNode' ref={titleRef} className='w-full text-(--text) font-newsreader text-[18px] font-bold border-0 outline-0' placeholder="Title" defaultValue={title} autoFocus readOnly={!isEditable}/>
         <button className='h-5 w-5 flex items-center justify-center cursor-pointer'>
-          <img src={StarIcon} alt="" className='h-full w-full block opacity-50'/>
+          <svg  
+            width="24" height="24" viewBox="0 0 24 24" fill='none' xmlns="http://www.w3.org/2000/svg" className='h-full w-full block opacity-50' onClick={()=>handleBlur(id, titleRef.current.value, contentRef.current.value, starred ? 0 : 1)}>
+            <path
+            d="M12 3L14.7 9.1L21.4 9.8L16.4 14.3L17.8 21L12 17.6L6.2 21L7.6 14.3L2.6 9.8L9.3 9.1L12 3Z"
+            fill={starred ? '#7ea3c9' : 'none'}
+            stroke={starred ? '#7ea3c9' : '#928e85'}
+            stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"
+          />
+          </svg>
         </button>
       </div>
       <div className='h-full w-full overflow-hidden'>
