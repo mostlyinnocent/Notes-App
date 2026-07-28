@@ -12,6 +12,8 @@ body{
 }
 
 @theme {
+  --font-sora: "Sora", serif;
+  --font-newsreader: "Newsreader", serif;
   --bg: #1c1d20;
   --card: #26282c;
   --sidebar: #222327;
