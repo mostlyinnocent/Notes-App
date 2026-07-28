@@ -4,6 +4,24 @@ Bugs and gotchas hit while building this project, and how they got solved. Newes
 
 ---
 
+## NavLink can't express "match this prefix, except one sibling route"
+
+**Date:** 2026-07-25
+
+### Problem
+Wanted the "All notes" sidebar link to stay visually active while browsing any note (`/notes/:noteId`), but *not* while on the separate "Starred" view (`/notes/starred`) — and to work correctly on first load and across refreshes with no manual state.
+
+### Root Cause
+`/notes/:noteId?` and `/notes/starred` both live under the same `/notes/` path prefix. React Router's `NavLink` decides its active state by matching the current URL against its own `to` prop's prefix (unless `end` is passed, which requires an *exact* match instead). Neither mode can express "active for this prefix, except for one specific sibling path" — `to="/notes"` without `end` would incorrectly light up while on `/notes/starred` too (since that path also starts with `/notes`), and `to="/notes"` with `end` would stop being active the moment you view any actual note (`/notes/64` isn't an *exact* match either).
+
+### Solution
+Used `useLocation()` directly instead of relying on `NavLink`'s built-in matching, and wrote the specific comparison needed: `const isStarredActive = location.pathname === '/notes/starred'`. "All notes" is then just `!isStarredActive` — active for literally everything else under `/notes`, including individual notes. No state needed for persistence either: `useLocation()` reads whatever the current URL already is, and the URL itself survives a page refresh without any extra work.
+
+### Lesson
+`NavLink`'s automatic active-matching (prefix or exact) only covers the common case of "highlight this link when its own path matches." Once two routes share a path prefix but need to be treated as mutually exclusive sections (rather than one being a sub-case of the other), that's a job for reading `useLocation()` and writing the exact boolean condition needed, rather than trying to force `NavLink`'s two built-in matching modes to express something more specific than either can.
+
+---
+
 ## Blur bubbles from any focused descendant, not just when focus truly leaves the container
 
 **Date:** 2026-07-25
